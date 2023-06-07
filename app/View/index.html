@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+</head>
+<body>
+<div id="app">
+    <v-app id="inspire">
+        <v-data-table
+                :headers="headers"
+                :items="cars"
+                :items-per-page="5"
+                class="elevation-1"
+        ></v-data-table>
+    </v-app>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data () {
+            return {
+                headers: [
+                    {
+                        text: 'Lp.',
+                        align: 'start',
+                        sortable: false,
+                        value: 'id',
+                    },
+                    { text: 'Nr rejestracyjny', value: 'registration' },
+                    { text: 'Marka', value: 'brand' },
+                    { text: 'Model', value: 'models' },
+                    { text: 'Data utworzenia', value: 'created' },
+                    { text: 'Data modyfikacji', value: 'updated' },
+                ],
+                cars: [
+
+                    <?php while($cars->valid()) { ?>
+            <?php $car = $cars->current(); ?>
+                {
+                    id: <?= $car->id ?>,
+                    registration: '<?= $car->registration ?>',
+                        brand: '<?= $car->brand ?>',
+                    model: '<?= $car->model ?>',
+                    created: '<?= $car->created ?>',
+                    updated: '<?= $car->updated ?>',
+                },
+                <?php $cars->next(); } ?>
+                ],
+            }
+        },
+    })
+
+</script>
+
+<!--
+{
+Lp: 1,
+registration: 'KNP 1786W',
+brand: '21',
+model: '',
+created: '2022-06-07 02:44',
+updated: '2023-04-06 12:48',
+},
+{
+Lp: 2,
+registration: 'GTU 200J3',
+brand: '34',
+model: '',
+created: '2022-06-08 12:22',
+updated: '2022-12-21 21:36',
+},
+{
+Lp: 3,
+registration: 'VBH 583II',
+brand: '1',
+model: '',
+created: '2022-06-08 16:07',
+updated: '2022-10-01 07:14',
+},
+
+
+/*           <?php while($cars->valid()) { ?>
+<?php $car = $cars->current(); ?>
+{
+Lp: <?= $car->id ?>,
+registration: '<?= $car->registration ?>',
+brand: '<?= $car->brand ?>',
+model: '<?= $car->model ?>',
+created: '<?= $car->created ?>',
+updated: '<?= $car->updated ?>',
+},
+<?php $cars->next(); } ?>
+*/-->
+
+<!--
+<?php while($cars->valid()) { ?>
+<?php $car = $cars->current(); ?>
+<?php var_dump($car); ?>
+<?php $r->next(); } ?>
+</body>
+</html>
+-->
