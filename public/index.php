@@ -1,39 +1,45 @@
 <?php
 
 ini_set('display_errors', 'On');
+ini_set('xdebug.var_display_max_depth', '5');
+date_default_timezone_set('UTC');
+
+define('APP_PATH', realpath('..') . '/app');
+
 error_reporting(E_ALL);
+$debug = new \Phalcon\Support\Debug();
+$debug->listen();
 
-$urlArray = explode('/',$_GET['_url']);
+/** @var \Phalcon\Di\FactoryDefault $di */
+try {
 
-$action = count($urlArray) > 1 ? $urlArray[1] : null;
-if(empty($action)) {
-    $action = 'index';
+    /**
+     * Read the configuration
+     */
+    $config = include APP_PATH . '/config/config.php';
+
+    /**
+     * Include Autoloader.
+     */
+    include APP_PATH . '/config/loader.php';
+
+    /**
+     * Include Services.
+     */
+    include APP_PATH . '/config/services.php';
+
+    /**
+     * Include Application.
+     */
+    include APP_PATH . '/config/app.php';
+    /**
+     * Handle the request
+     */
+} catch (\Exception $e) {
+
+    var_dump($e);
+    print_r($e->getMessage() . '<br>');
+    print_r('<pre>' . $e->getTraceAsString() . '</pre>');
+
+    return (new Phalcon\Http\Response)->setStatusCode(500, 'Error')->sendHeaders()->send();
 }
-
-include_once '../config/config.php';
-global $dbConfig;
-$dbh = new PDO(
-    'mysql:host='.$dbConfig->host.';dbname='.$dbConfig->dbname,
-    $dbConfig->user,
-    $dbConfig->pass,
-    [
-        PDO::ATTR_CASE  => PDO::CASE_NATURAL,
-    ]
-);
-
-include_once '../app/Controllers/Controller.php';
-$controller = new \Controllers\Controller();
-
-include_once '../app/Models/Model.php';
-$model = new \Models\Model();
-
-if(method_exists($controller, $action)) {
-    $controller->model = $model;
-    $controller->$action();
-}
-else{
-    throw new Exception('Action unknown');
-}
-
-
-die();
